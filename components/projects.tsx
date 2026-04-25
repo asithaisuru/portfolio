@@ -26,7 +26,7 @@ export default function Projects() {
         // filter + sort (important)
         const filtered = data
           .filter((repo: Repo) =>
-            repo.name !== 'asithaisuru' && // skip profile repo
+            repo.name !== 'asithaisuru' && repo.name !== 'portfolio' &&
             !repo.name.toLowerCase().includes('test') &&
             !repo.fork
           )
