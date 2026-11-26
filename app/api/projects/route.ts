@@ -19,6 +19,7 @@ export async function GET() {
             ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}),
           },
           next: { revalidate: 900 },
+          signal: AbortSignal.timeout(8000),
         },
       );
 

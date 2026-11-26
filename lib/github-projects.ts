@@ -62,7 +62,7 @@ export async function fetchPublicGithubProjects(signal: AbortSignal): Promise<Gi
 
   for (let page = 1; page <= 5; page++) {
     const response = await fetch(githubReposUrl(page), {
-      signal,
+      signal: AbortSignal.any([signal, AbortSignal.timeout(8000)]),
       headers: { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' },
     });
     if (!response.ok) throw new Error(`GitHub API returned ${response.status}`);

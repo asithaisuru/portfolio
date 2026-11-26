@@ -33,7 +33,7 @@ export default function Hero() {
 
         {/* Subheading */}
         <p className="text-xl sm:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-          Building intelligent solutions with the MERN stack and computer vision. Transforming ideas into impactful applications.
+          Full-stack business applications with TypeScript, Next.js, NestJS and Laravel, alongside computer vision and 3D reconstruction research.
         </p>
 
         {/* CTA Buttons */}
