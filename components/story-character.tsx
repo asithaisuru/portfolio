@@ -13,7 +13,7 @@ const standAloneChapters = new Set<StoryChapter>(storyChapters.slice(0, 4));
 export function StoryCharacter({ enabled, onOwnerChange }: { enabled: boolean; onOwnerChange: (chapter: StoryChapter) => void }) {
   const host = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const [pose, setPose] = useState<{ outfit: BrickOutfit; interaction: BrickInteraction; entry: BrickEntry; entryKey: number }>({ outfit: 'suit', interaction: 'idle', entry: 'none', entryKey: 0 });
 
   useEffect(() => {
@@ -26,8 +26,8 @@ export function StoryCharacter({ enabled, onOwnerChange }: { enabled: boolean; o
     let previousOwner: StoryChapter | null = null;
     const update = () => {
       frame = 0;
-      const anchors = getAnchors();
-      if (!host.current || !stage.current || !enabled || anchors.some(({ section, node }) => !section || !node)) return;
+      const anchors = getAnchors().filter(({ section, node }) => section && node);
+      if (!host.current || !stage.current || !enabled || !anchors.length) return;
       const currentNodes = new Set(anchors.map(({ node }) => node!));
       observedNodes.forEach((node) => { if (!currentNodes.has(node)) { resize.unobserve(node); observedNodes.delete(node); } });
       currentNodes.forEach((node) => { if (!observedNodes.has(node)) { resize.observe(node); observedNodes.add(node); } });
@@ -83,7 +83,7 @@ export function StoryCharacter({ enabled, onOwnerChange }: { enabled: boolean; o
   }, [enabled, onOwnerChange]);
 
   return (
-    <div ref={host} aria-hidden="true" data-persistent-story-character className="pointer-events-none fixed left-0 top-0 z-20" style={{ display: enabled ? 'block' : 'none', overflow: 'hidden' }}>
+    <div ref={host} aria-hidden="true" data-persistent-story-character className="pointer-events-none fixed left-0 top-0 z-20" style={{ display: enabled ? 'block' : 'none', overflow: 'hidden', visibility: 'hidden' }}>
       <div ref={stage} style={{ width: 640, height: 640, transformOrigin: 'top left' }}>
         <CharacterCanvas active={enabled && visible} outfit={pose.outfit} interaction={pose.interaction} entry={pose.entry} entryKey={pose.entryKey} autoWave={pose.outfit !== 'work'} />
       </div>

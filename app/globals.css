@@ -424,3 +424,8 @@ button:disabled { cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+.skip-to-summary { position: fixed; top: -100px; left: 1rem; z-index: 100; padding: .85rem 1.2rem; border-radius: 1rem; background: #243d61; color: white; font-weight: 800; }
+.skip-to-summary:focus { top: 1rem; outline: 3px solid #e88864; outline-offset: 3px; }
+.recruiter-page a:focus-visible, .story-app a:focus-visible, .story-app button:focus-visible { outline: 3px solid #287468; outline-offset: 4px; }
+.recruiter-page section { scroll-margin-top: 1.5rem; }

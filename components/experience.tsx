@@ -20,6 +20,12 @@ export default function Experience() {
           </h3>
 
           <div className="space-y-8">
+            <div className="glass-hover rounded-xl p-8 border border-purple-500/20 relative overflow-hidden fade-in-up">
+              <h4 className="text-xl font-bold text-white mb-2">IT Intern (Full-Stack Software Engineering)</h4>
+              <p className="text-purple-300 font-medium">KeenRabbits (Pvt) Ltd, Gampaha</p>
+              <p className="text-sm text-gray-400 mt-2">April 2026 – Present · Full-time</p>
+              <p className="mt-4 text-gray-300">Developing digital library and property platforms with TypeScript, NestJS, Next.js, Laravel and Prisma/MariaDB, including payment/invoicing, access-control, notification and private asset workflows.</p>
+            </div>
             {/* Job */}
             <div className="glass-hover rounded-xl p-8 border border-purple-500/20 relative overflow-hidden fade-in-up">
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-600 to-pink-600"></div>
@@ -43,7 +49,7 @@ export default function Experience() {
                 </li>
                 <li className="flex gap-3">
                   <span className="text-purple-400 flex-shrink-0 mt-1">•</span>
-                  <span>Managed IT support tickets and escalated complex technical issues, maintaining SLAs.</span>
+                  <span>Managed IT support tickets and escalated complex technical issues.</span>
                 </li>
               </ul>
             </div>
@@ -67,12 +73,12 @@ export default function Experience() {
                   <h4 className="text-xl font-bold text-white mb-2">B.Sc. (Hons) in Industrial Information Technology</h4>
                   <p className="text-purple-300 font-medium">Uva Wellassa University of Sri Lanka</p>
                 </div>
-                <span className="text-sm text-gray-400 mt-2 sm:mt-0">Expected 2026</span>
+                <span className="text-sm text-gray-400 mt-2 sm:mt-0">Expected June–July 2027</span>
               </div>
 
               <div className="mb-4">
-                <p className="text-gray-300 mb-2"><span className="text-cyan-300 font-semibold">GPA:</span> 3.54</p>
-                <p className="text-gray-400 text-sm">Relevant Coursework: OOP, Software Engineering, DBMS, Web Development, Computer Networks, Data Structures & Algorithms, Software QA, HCI</p>
+                <p className="text-gray-300 mb-2"><span className="text-cyan-300 font-semibold">GPA to date:</span> 3.54 · Coursework completed; final results pending.</p>
+                <p className="text-gray-400 text-sm">Relevant Coursework: OOP, Software Engineering, DBMS, Web Application Development, Data Structures &amp; Algorithms, Software Quality Assurance</p>
               </div>
             </div>
           </div>
@@ -81,7 +87,7 @@ export default function Experience() {
           <div className="mt-12 glass-hover rounded-xl p-8 border border-purple-500/20 fade-in-up" style={{ animationDelay: '0.2s' }}>
             <h4 className="text-lg font-bold text-white mb-4">Professional Summary</h4>
             <p className="text-gray-300 leading-relaxed">
-              Results-oriented Software Engineer with proven expertise in designing and deploying practical applications across the full stack. Specialized in MERN stack development with hands-on experience in computer vision and AI integration. Strong foundation in databases, REST APIs, and Agile practices. Eager to leverage technical skills in innovative software solutions and contribute to high-impact projects.
+              Industrial Information Technology undergraduate with coursework completed and final results pending. Full-stack development with TypeScript, Next.js, NestJS and Laravel, alongside computer vision and 3D reconstruction research. Available for immediate full-time software engineering opportunities.
             </p>
           </div>
         </div>

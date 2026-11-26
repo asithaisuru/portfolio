@@ -62,7 +62,7 @@ export default function Contact() {
         <div className="max-w-md mx-auto space-y-10">
           <div className='flex justify-center items-center'>
             <a
-              href="/CV - Asitha Isuru - Software Engineer.pdf"
+              href="/Asitha_Isuru_Public_CV.pdf"
               download
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-purple-600/50 transition-all duration-300 hover:scale-105"
             >

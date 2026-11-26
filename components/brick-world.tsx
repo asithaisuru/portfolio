@@ -1,7 +1,7 @@
 'use client';
 
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import * as THREE from 'three';
 import { PrintedBrickFace } from './brick-face';
 import { LandingMeadow } from './landing-meadow';
@@ -36,19 +36,26 @@ function useCursor() {
   return cursor;
 }
 
-function useWebGL() {
-  const [available, setAvailable] = useState(false);
-
-  useEffect(() => {
+let webGLAvailable: boolean | undefined;
+const subscribeMotion = (changed: () => void) => {
+  const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+  media.addEventListener('change', changed);
+  return () => media.removeEventListener('change', changed);
+};
+const webGLSnapshot = () => {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  if (webGLAvailable === undefined) {
     try {
       const canvas = document.createElement('canvas');
-      setAvailable(Boolean(canvas.getContext('webgl2') || canvas.getContext('webgl')));
-    } catch {
-      setAvailable(false);
-    }
-  }, []);
-
-  return available;
+      const context = canvas.getContext('webgl2') || canvas.getContext('webgl');
+      webGLAvailable = Boolean(context);
+      context?.getExtension('WEBGL_lose_context')?.loseContext();
+    } catch { webGLAvailable = false; }
+  }
+  return webGLAvailable;
+};
+function useWebGL() {
+  return useSyncExternalStore(subscribeMotion, webGLSnapshot, () => false);
 }
 
 
@@ -1195,17 +1202,18 @@ function LandingWalker({ arrived, interaction, cursor, onArrivalComplete }: { ar
   useEffect(() => {
     startTime.current = null;
     finished.current = false;
-    setWalking(arrived);
     group.current?.position.copy(arrived ? path.v0 : path.v3);
   }, [arrived, path]);
 
   useFrame(({ clock }, delta) => {
     if (!group.current) return;
     if (!arrived || finished.current) {
+      if (walking) setWalking(false);
       group.current.position.copy(path.v3);
       group.current.rotation.y = THREE.MathUtils.damp(group.current.rotation.y, 0, 6, delta);
       return;
     }
+    if (!walking) setWalking(true);
     if (startTime.current === null) startTime.current = clock.elapsedTime;
     const progress = reducedMotion.current ? 1 : Math.min((clock.elapsedTime - startTime.current) / 3.2, 1);
     const eased = progress * progress * (3 - 2 * progress);

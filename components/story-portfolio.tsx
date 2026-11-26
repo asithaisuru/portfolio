@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import {
   ArrowDown, ArrowRight, ArrowUp, ArrowUpRight, BriefcaseBusiness,
   ChevronLeft, ChevronRight, Code2, Download, ExternalLink,
@@ -20,7 +20,7 @@ const LandingCanvas = dynamic(() => import('./brick-world').then((mod) => mod.La
 const ShipCanvas = dynamic(() => import('./brick-world').then((mod) => mod.ShipCanvas), { ssr: false });
 
 const CONTACT_EMAIL = 'asithafree1@gmail.com';
-const CV_URL = '/CV - Asitha Isuru - Software Engineer.pdf';
+const CV_URL = '/Asitha_Isuru_Public_CV.pdf';
 
 const chapters = [
   { id: 'about', title: 'Home', number: '00' },
@@ -35,9 +35,12 @@ type ChapterId = (typeof chapters)[number]['id'];
 type Phase = 'story' | 'launching' | 'space' | 'landing';
 type ProjectSource = 'server' | 'public' | 'cached' | null;
 const PROJECT_CACHE_KEY = 'asitha-github-public-repositories';
+const noObserverSnapshot = () => !('IntersectionObserver' in window);
+const subscribeCapabilities = () => () => {};
 
 function scrollToChapter(chapter: ChapterId) {
-  document.getElementById(chapter)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+  document.getElementById(chapter)?.scrollIntoView({ behavior, block: 'start' });
 }
 
 function ChapterAdvance({ active }: { active: ChapterId }) {
@@ -138,9 +141,11 @@ function Hero() {
             Hey, I&apos;m<br /><span className="relative z-10 text-[#e88864]">Asitha<span className="text-[#1f374f]">.</span></span><br />
             <span className="text-[#1e344c]">I make ideas</span><br /><span className="relative inline-block text-[#3e998c]">come alive<span className="absolute -bottom-2 left-1 right-0 h-2 rotate-[-2deg] rounded-full bg-[#f6bc67] sm:-bottom-3" /></span>
           </h1>
-          <p className="mt-6 max-w-[520px] text-base leading-[1.65] text-[#596b79] sm:text-lg lg:mt-5 lg:text-[16px] lg:leading-[1.6]">Software developer, curious problem-solver, and big believer that technology should feel a little magical. Come explore the story behind my code.</p>
+          <p className="mt-6 max-w-[520px] text-base leading-[1.65] text-[#596b79] sm:text-lg lg:mt-5 lg:text-[16px] lg:leading-[1.6]">Full-stack developer working with TypeScript, Next.js, NestJS and Laravel, with research experience in computer vision and 3D reconstruction. Available for immediate full-time software engineering opportunities.</p>
 
           <div className="mt-6 flex flex-wrap items-center gap-3 lg:mt-5">
+            <a href="/recruiter" className="inline-flex items-center rounded-full border-2 border-[#243d61] bg-white px-6 py-3 text-sm font-black text-[#243d61]">Recruiter summary</a>
+            <a href={CV_URL} download className="inline-flex items-center gap-2 rounded-full border border-[#d0dad1] bg-white px-5 py-3 text-sm font-bold text-[#243d61]"><Download size={18} /> Download CV</a>
             <button onClick={() => scrollToChapter('education')} className="group inline-flex items-center gap-3 rounded-full bg-[#243d61] px-6 py-3 text-sm font-black text-white shadow-[0_14px_30px_#23416228] transition-all hover:-translate-y-1 hover:bg-[#314f78]">Start the story <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" /></button>
             <button onClick={() => scrollToChapter('mission')} className="inline-flex items-center gap-2 rounded-full border border-[#d0dad1] bg-white/70 px-6 py-3 text-sm font-bold text-[#243d61] transition-colors hover:bg-white"><Rocket size={18} /> See my work</button>
           </div>
@@ -191,14 +196,15 @@ function Education() {
           <article tabIndex={0} onMouseEnter={() => setHighlight('university')} onMouseLeave={() => setHighlight(null)} onFocus={() => setHighlight('university')} onBlur={() => setHighlight(null)} className="story-card relative rounded-[30px] border border-[#dbe7df] bg-[#fffdf8] p-6 shadow-[0_20px_50px_#527d6c12] outline-offset-4 focus-visible:outline-2 focus-visible:outline-[#3e998c] sm:p-8">
             <div className="education-card-header flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3"><span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-[#d9eee4] text-[#287e72]"><GraduationCap size={22} /></span><span className="text-[11px] font-black uppercase tracking-[0.16em] text-[#3e998c]">University</span></div>
-              <span className="rounded-full bg-[#fff0d9] px-3 py-2 text-[11px] font-extrabold text-[#85602e]">Learning in progress ✦</span>
+              <span className="rounded-full bg-[#fff0d9] px-3 py-2 text-[11px] font-extrabold text-[#85602e]">Coursework completed; final results pending</span>
             </div>
             <h3 className="mt-6 text-2xl font-black leading-[1.2] tracking-tight text-[#1d3851] sm:text-3xl">B.Sc. (Hons) in Industrial Information Technology</h3>
             <p className="mt-3 text-base font-semibold text-[#3d907f]">Uva Wellassa University of Sri Lanka</p>
-            <p className="mt-5 leading-relaxed text-[#607684]">Software engineering, databases, networks, and all the curious experiments in between. Where I learned to turn questions into projects.</p>
+            <p className="mt-5 leading-relaxed text-[#607684]">2020/2021 intake · GPA to date: 3.54. Expected graduation: June–July 2027.</p>
+            <p className="mt-3 leading-relaxed text-[#607684]">Coursework: OOP, Software Engineering, DBMS, Web Application Development, Data Structures &amp; Algorithms, and Software Quality Assurance.</p>
             <div className="education-tags mt-6 flex flex-wrap gap-2 border-t border-[#e4ebe5] pt-5"><span className="mini-tag">Software Engineering</span><span className="mini-tag">Problem Solving</span><span className="mini-tag">Computer Vision</span></div>
           </article>
-          <p className="flex items-center gap-3 px-2 text-sm font-semibold leading-relaxed text-[#638278]"><Sparkles size={18} className="shrink-0 text-[#3e998c]" /> The best part? I never stopped learning.</p>
+          <p className="flex items-center gap-3 px-2 text-sm font-semibold leading-relaxed text-[#638278]"><Sparkles size={18} className="shrink-0 text-[#3e998c]" /><span>Oracle AI Vector Search Certified Professional (1Z0-184-25) · Issued 16 May 2025.</span></p>
         </div>
       </div>
     </section>
@@ -227,12 +233,12 @@ function Experience() {
           <div className={journeyStyles.timeline}>
             <article tabIndex={0} data-active={highlight === 'training'} onMouseEnter={() => setHoveredRole('training')} onMouseLeave={() => setHoveredRole(null)} onFocus={() => setFocusedRole('training')} onBlur={() => setFocusedRole(null)} className={journeyStyles.card}>
               <div className={journeyStyles.header}>
-                <div className={journeyStyles.identity}><span className={journeyStyles.icon}><TerminalSquare size={21} /></span><p className={journeyStyles.date}>2026 – Present</p></div>
+                <div className={journeyStyles.identity}><span className={journeyStyles.icon}><TerminalSquare size={21} /></span><p className={journeyStyles.date}>April 2026 – Present · Full-time</p></div>
                 <span className={journeyStyles.status}>Current chapter</span>
               </div>
-              <h3 className={journeyStyles.role}>Software Development · Industrial Training</h3>
+              <h3 className={journeyStyles.role}>IT Intern (Full-Stack Software Engineering)</h3>
               <p className={journeyStyles.company}>KeenRabbits (Pvt) Ltd</p>
-              <p className={journeyStyles.copy}>Building hands-on experience with full-stack business applications, Laravel workflows, finance features, and team collaboration on live projects.</p>
+              <p className={journeyStyles.copy}>Developing digital library and property platforms with TypeScript, NestJS, Next.js, Laravel and Prisma/MariaDB. Work includes payment and invoicing workflows, access controls, notifications and private asset delivery.</p>
               <div className={journeyStyles.tags}><span className="mini-tag">Laravel</span><span className="mini-tag">Business Systems</span><span className="mini-tag">Full Stack</span></div>
             </article>
             <article tabIndex={0} data-active={highlight === 'support'} onMouseEnter={() => setHoveredRole('support')} onMouseLeave={() => setHoveredRole(null)} onFocus={() => setFocusedRole('support')} onBlur={() => setFocusedRole(null)} className={`${journeyStyles.card} ${journeyStyles.previous}`}>
@@ -242,7 +248,7 @@ function Experience() {
               </div>
               <h3 className={journeyStyles.role}>Customer Support Technician</h3>
               <p className={journeyStyles.company}>Dialog Axiata (Pvt) Ltd</p>
-              <p className={journeyStyles.copy}>Troubleshooting systems, helping people get unstuck, and learning that the best technology always starts with understanding its users.</p>
+              <p className={journeyStyles.copy}>Diagnosed hardware, operating-system and network issues, configured employee workstations, and handled IT support tickets. Full-time · Colombo.</p>
               <div className={journeyStyles.tags}><span className="mini-tag">IT Support</span><span className="mini-tag">Troubleshooting</span><span className="mini-tag">Teamwork</span></div>
             </article>
           </div>
@@ -253,10 +259,10 @@ function Experience() {
 }
 
 const skills = [
-  { icon: Code2, title: 'Frontend', desc: 'Interfaces people love to use', tint: 'bg-[#e7edff] text-[#5c76c1]', items: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'JavaScript'] },
-  { icon: TerminalSquare, title: 'Backend', desc: 'The engines behind the magic', tint: 'bg-[#dbf1e7] text-[#33937b]', items: ['Laravel', 'PHP', 'Node.js', 'REST APIs', 'MongoDB'] },
-  { icon: Sparkles, title: 'AI & Computer Vision', desc: 'Teaching computers to see', tint: 'bg-[#fff0d9] text-[#be884e]', items: ['Python', 'OpenCV', 'PyTorch', 'Machine Learning', '3D Reconstruction'] },
-  { icon: Satellite, title: 'Tools & Systems', desc: 'Getting the whole thing working', tint: 'bg-[#f5e4ef] text-[#ac719c]', items: ['Git & GitHub', 'Linux', 'Docker', 'AWS', 'WebSockets'] },
+  { icon: Code2, title: 'Frontend', desc: 'Interfaces people love to use', tint: 'bg-[#e7edff] text-[#5c76c1]', items: ['React & Next.js', 'TypeScript & JavaScript', 'Tailwind CSS', 'HTML5 & CSS3', 'Three.js & React Three Fiber'] },
+  { icon: TerminalSquare, title: 'Backend', desc: 'The engines behind the magic', tint: 'bg-[#dbf1e7] text-[#33937b]', items: ['NestJS & Laravel', 'Node.js & Express.js', 'FastAPI & REST APIs', 'PHP, SQL & Prisma', 'MariaDB & PostgreSQL', 'MongoDB, SQLite & Redis', 'JWT, RBAC & MFA'] },
+  { icon: Sparkles, title: 'AI & Computer Vision', desc: 'Teaching computers to see', tint: 'bg-[#fff0d9] text-[#be884e]', items: ['Python', 'OpenCV', 'PyTorch', 'Open3D & COLMAP', 'CUDA-capable processing', '3D Reconstruction'] },
+  { icon: Satellite, title: 'Tools & Systems', desc: 'Getting the whole thing working', tint: 'bg-[#f5e4ef] text-[#ac719c]', items: ['Git & GitHub Actions', 'Linux VPS', 'AWS S3 & IAM', 'Docker', 'Socket.IO & WebSockets', 'Laravel Reverb', 'Playwright & API testing', 'Unit, integration & regression tests', 'Agile/Scrum'] },
 ];
 
 function Skills() {
@@ -338,7 +344,6 @@ function MissionLaunch({ onLaunch, onRetry, status, projectCount, source, charac
 function Contact({ hasLanded, characterVisible }: { hasLanded: boolean; characterVisible: boolean }) {
   const [interaction, setInteraction] = useState<ContactInteraction>('idle');
   const [hasWalked, setHasWalked] = useState(false);
-  useEffect(() => { if (!hasLanded) setHasWalked(false); }, [hasLanded]);
   const contactPrompt: Record<ContactInteraction, string> = {
     idle: 'Watch me work the terminal! Hover or focus a channel to take control. 👋',
     email: 'Tapping the email control… 📬',
@@ -411,17 +416,18 @@ function Contact({ hasLanded, characterVisible }: { hasLanded: boolean; characte
 function SceneWhenNear({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [near, setNear] = useState(false);
+  const noObserver = useSyncExternalStore(subscribeCapabilities, noObserverSnapshot, () => false);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    if (!('IntersectionObserver' in window)) { setNear(true); return; }
+    if (!('IntersectionObserver' in window)) return;
     const observer = new IntersectionObserver(([entry]) => setNear(entry.isIntersecting), { rootMargin: '320px' });
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
 
-  return <div ref={ref} className="h-full w-full">{near ? children : null}</div>;
+  return <div ref={ref} className="h-full w-full">{(near || noObserver) ? children : null}</div>;
 }
 
 function WarpSequence() {
@@ -668,7 +674,6 @@ export default function StoryPortfolio() {
   useEffect(() => {
     let cancelled = false;
     const controller = new AbortController();
-    setProjectStatus('loading');
 
     const accept = (loaded: GithubProject[], source: Exclude<ProjectSource, null>) => {
       if (cancelled) return;
@@ -705,7 +710,7 @@ export default function StoryPortfolio() {
 
       // Server-side proxy remains available as a fallback for browser rate limits or CORS.
       try {
-        const response = await fetch('/api/projects', { signal: controller.signal, cache: 'no-store' });
+        const response = await fetch('/api/projects', { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(8000)]), cache: 'no-store' });
         if (!response.ok) throw new Error('Project feed unavailable');
         const data: ProjectsResponse = await response.json();
         if (!Array.isArray(data.projects)) throw new Error('Invalid projects');
@@ -773,18 +778,19 @@ export default function StoryPortfolio() {
 
   return (
     <main className="story-app min-h-screen overflow-x-clip bg-[#f9f5e9] font-sans selection:bg-[#f7bc78] selection:text-[#20344c]">
+      <a href="/recruiter" className="skip-to-summary">Skip to recruiter summary</a>
       <StoryNavigation active={chapter} isSpace={phase !== 'story'} />
       <div className="story-progress fixed left-0 top-0 z-50 h-1 bg-[#efaa72]" style={{ width: `${((chapters.findIndex(({ id }) => id === chapter) + 1) / chapters.length) * 100}%` }} />
       <Hero />
       <Education />
       <Experience />
       <Skills />
-      <MissionLaunch characterVisible={characterOwner === 'mission'} onLaunch={launch} onRetry={() => setRetryCount((count) => count + 1)} status={projectStatus} source={projectSource} projectCount={projects.length} />
-      <Contact hasLanded={hasLanded} characterVisible={characterOwner === 'contact'} />
+      <MissionLaunch characterVisible={characterOwner === 'mission'} onLaunch={launch} onRetry={() => { setProjectStatus('loading'); setRetryCount((count) => count + 1); }} status={projectStatus} source={projectSource} projectCount={projects.length} />
+      <Contact key={hasLanded ? "landed" : "approaching"} hasLanded={hasLanded} characterVisible={characterOwner === 'contact'} />
       <StoryCharacter enabled={phase === 'story'} onOwnerChange={setCharacterOwner} />
       {phase === 'story' && <ChapterAdvance active={chapter} />}
       {phase === 'launching' && <WarpSequence />}
-      {phase === 'space' && <ProjectGalaxy projects={projects} status={projectStatus} onRetry={() => setRetryCount((count) => count + 1)} onExit={() => setPhase('story')} onLand={() => setPhase('landing')} />}
+      {phase === 'space' && <ProjectGalaxy projects={projects} status={projectStatus} onRetry={() => { setProjectStatus('loading'); setRetryCount((count) => count + 1); }} onExit={() => setPhase('story')} onLand={() => setPhase('landing')} />}
       {phase === 'landing' && <LandingSequence />}
     </main>
   );

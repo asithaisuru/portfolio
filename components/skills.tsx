@@ -13,19 +13,19 @@ export default function Skills() {
     {
       title: 'Backend',
       icon: Database,
-      skills: ['Node.js', 'Express.js', 'MongoDB', 'REST APIs', 'PHP', 'Java'],
+      skills: ['NestJS', 'Laravel', 'Node.js', 'Express.js', 'FastAPI', 'REST APIs', 'PHP', 'Prisma', 'MariaDB', 'PostgreSQL', 'MongoDB', 'SQLite', 'Redis'],
       color: 'from-purple-500 to-pink-500',
     },
     {
       title: 'AI & CV',
       icon: Brain,
-      skills: ['OpenCV', 'PyTorch', 'Machine Learning', '3D Reconstruction', 'Computer Vision', 'TensorFlow'],
+      skills: ['Python', 'OpenCV', 'PyTorch', 'Open3D', 'COLMAP', 'CUDA-capable processing', '3D Reconstruction'],
       color: 'from-orange-500 to-red-500',
     },
     {
       title: 'Tools & DevOps',
       icon: Network,
-      skills: ['Git/GitHub', 'Linux', 'WebSocket', 'Docker', 'AWS', 'Agile/Scrum'],
+      skills: ['Git/GitHub', 'GitHub Actions', 'Linux VPS', 'Socket.IO', 'WebSockets', 'Laravel Reverb', 'JWT/RBAC/MFA', 'Docker', 'AWS S3/IAM', 'Playwright', 'Unit/Integration/API Testing', 'Agile/Scrum'],
       color: 'from-green-500 to-emerald-500',
     },
   ];
@@ -78,12 +78,7 @@ export default function Skills() {
           <h3 className="text-2xl font-bold mb-8 text-foreground">Certifications</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              'Oracle Certified Professional',
-              'GitHub Foundations',
-              'Google Workspace Essentials',
-              'Machine Learning with Python',
-              'Cisco Networking Academy',
-              'NDG Linux Unhatched',
+              'Oracle AI Vector Search Certified Professional (1Z0-184-25) · Issued 16 May 2025',
             ].map((cert, index) => (
               <div
                 key={cert}
